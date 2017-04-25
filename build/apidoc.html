@@ -2614,7 +2614,23 @@
     <li>description and source-code<pre class="apidocCodePre">baucis = function (options) {
   return baucis.empty();
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var vegetables = new Vegetables();
+var tomato = new Vegetable({ _id: &#x27;abcdabcdabcdabcd&#x27; });
+var potato = new Vegetable({ name: &#x27;Potato&#x27; });
+
+// Make some requests and print out the results
+
+// Fetch red vegetables, setting a few options
+vegetables.<span class="apidocCodeKeywordSpan">baucis</span>(
+  {
+    conditions: { color: &#x27;red&#x27; },
+    populate: &#x27;child&#x27;,
+    skip: 20,
+    limit: 10,
+    sort: &#x27;foo -bar&#x27;
+  },
+...</pre></li>
     </ul>
 
 
@@ -2840,7 +2856,23 @@
   // If the constructor inherits, call the super constructor on the object
   // to be decorated.
   if (Constructor.super ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+after(fixtures.controller.deinit);
+
+it(&#x27;should allow passing string name to create&#x27;, function (done) {
+  var makeController = function () { baucis.<span class="apidocCodeKeywordSpan">Controller</span>(&#x27;unmade&#x27;) };
+  makeController();
+  expect(makeController).to.not.throwException();
+  done();
+});
+
+it(&#x27;should allow passing a model to create&#x27;, function (done) {
+  var makeController = function () { baucis.Controller(mongoose.model(&#x27;unmade&#x27;)) };
+...</pre></li>
     </ul>
 
 
@@ -3405,7 +3437,23 @@
   // If the constructor inherits, call the super constructor on the object
   // to be decorated.
   if (Constructor.super ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  request.baucis.query.select(&#x27;_id lastModified&#x27;);
+  next();
+});
+
+veggies.request(function (request, response, next) {
+  if (request.query.failIt !== &#x27;true&#x27;) return next();
+  request.baucis.incoming(es.through(function (context) {
+    this.emit(&#x27;error&#x27;, baucis.<span class="apidocCodeKeywordSpan">Error.Forbidden</span>(&#x27;Bento box&#x27;));
+  }));
+  next();
+});
+
+veggies.request(function (request, response, next) {
+  if (request.query.failItFunction !== &#x27;true&#x27;) return next();
+  request.baucis.incoming(function (context, callback) {
+...</pre></li>
     </ul>
 
 
@@ -5587,23 +5635,21 @@ pipeline(function (incoming, callback) {
   return instance.rest(model);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-``` javascript
-// Create a mongoose schema.
-var Vegetable = new mongoose.Schema({ name: String });
-// Register new models with mongoose.
-mongoose.model(&#x27;vegetable&#x27;, Vegetable);
-// Create a simple controller.  By default these HTTP methods
-// are activated: HEAD, GET, POST, PUT, DELETE
-baucis.<span class="apidocCodeKeywordSpan">rest</span>(&#x27;vegetable&#x27;);
-// Create the app and listen for API requests
-var app = express();
-app.use(&#x27;/api&#x27;, baucis());
-app.listen(8012);
-```
+Add custom API definitions to a controller with `controller.addSwaggerApi`.  Other minor Swagger fixes.
 
-That&#x27;s it!  Now you have an RFC-compliant, flexible, and semantically rich API dealing with vegetables.  You could access it
- with URLs like `http://localhost:8012/api/vegetables`.  CRUD is supported using [GET, PUT, POST, and DELETE](https://github.com
-/wprl/baucis/wiki/HTTP-Verbs).
+
+## v0.7.0
+
+Add support for hint and comment.  Enable them like so:
+
+    baucis.<span class="apidocCodeKeywordSpan">rest</span>({
+      singular: &#x27;fish&#x27;,
+      &#x27;allow hints&#x27;: true,
+      &#x27;allow comments&#x27;: true
+    });
+
+Note: I decided to be more strict with implementing semver.  Minor version will be increasing with each new feature and patch number
+ will be increased with bug fixes and misc. patches.
 ...</pre></li>
     </ul>
 
@@ -5804,7 +5850,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -5820,7 +5875,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -5836,7 +5907,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -5852,7 +5933,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -5986,7 +6083,23 @@ plugins.links.apply(baucis);
   // If the constructor inherits, call the super constructor on the object
   // to be decorated.
   if (Constructor.super ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+after(fixtures.controller.deinit);
+
+it(&#x27;should allow passing string name to create&#x27;, function (done) {
+  var makeController = function () { baucis.<span class="apidocCodeKeywordSpan">Controller</span>(&#x27;unmade&#x27;) };
+  makeController();
+  expect(makeController).to.not.throwException();
+  done();
+});
+
+it(&#x27;should allow passing a model to create&#x27;, function (done) {
+  var makeController = function () { baucis.Controller(mongoose.model(&#x27;unmade&#x27;)) };
+...</pre></li>
     </ul>
 
 
@@ -6034,7 +6147,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -6050,7 +6172,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -6066,7 +6204,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -6082,7 +6230,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -6330,21 +6494,22 @@ plugins.links.apply(baucis);
   // to be decorated.
   if (Constructor.super ...</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-  protect.use(function (error, request, response, next) {
-if (!error) return next();
-if (!error.message) return next(error);
+response.vary(&#x27;API-Version&#x27;);
+// TODO move this
+// Requested range is used to select highest possible release number.
+// Then later controllers are checked for matching the release number.
+var version = request.headers[&#x27;api-version&#x27;] || &#x27;*&#x27;;
+// Check the requested API version is valid.
+if (!semver.validRange(version)) {
+  next(RestError.<span class="apidocCodeKeywordSpan">BadRequest</span>(&#x27;The requested API version range &#x22;%s&#x22; was
+not a valid semver range&#x27;, version));
+  return;
+}
 
-var message = &#x27;The requested query hint is invalid&#x27;
-// Bad Mongo query hint (2.x).
-if (error.message === &#x27;bad hint&#x27;) {
-  next(RestError.<span class="apidocCodeKeywordSpan">BadRequest</span>(message));
-  return;
-}
-// Bad Mongo query hint (3.x).
-if (error.message.match(&#x27;planner returned error: bad hint&#x27;)) {
-  next(RestError.BadRequest(message));
-  return;
-}
+request.baucis.release = semver.maxSatisfying(api.releases(), version);
+// Check for API version unsatisfied and give a 400 if no versions match.
+if (!request.baucis.release) {
+  next(RestError.BadRequest(&#x27;The requested API version range &#x22;%s&#x22; could not be satisfied&#x27;, version));
 ...</pre></li>
     </ul>
 
@@ -7428,20 +7593,22 @@ controller.request(&#x27;instance&#x27;, &#x27;post&#x27;, function (request, re
   // to be decorated.
   if (Constructor.super ...</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-// A filter function for checking a given value is defined and not null.
-function exists (o) { return o !== undefined &#x26;&#x26; o !== null }
-// Handle variable number of arguments
-function last (skip, names, values) {
-var r = {};
-var position = names.length;
-var count = values.filter(exists).length - skip;
-if (count &#x3c; 1) throw RestError.<span class="apidocCodeKeywordSpan">Misconfigured</span>(&#x27;Too few arguments.&#x27;);
+var RestError = require(&#x27;rest-error&#x27;);
 
-names.forEach(function (name) {
-  var index = skip + count - position;
-  position--;
-  if (index &#x3e;= skip) r[name] = values[index];
-});
+// __Module Definition__
+var Api = module.exports = deco(function (options, protect) {
+  var api = this;
+
+  api.use(function (request, response, next) {
+if (request.baucis) return next(RestError.<span class="apidocCodeKeywordSpan">Misconfigured</span>(&#x27;Baucis request property
+ already created&#x27;));
+
+request.baucis = {};
+response.removeHeader(&#x27;x-powered-by&#x27;);
+// Any caching proxies should be aware of API version.
+response.vary(&#x27;API-Version&#x27;);
+// TODO move this
+// Requested range is used to select highest possible release number.
 ...</pre></li>
     </ul>
 
@@ -8815,7 +8982,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -8831,7 +9007,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -8847,7 +9039,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -8863,7 +9065,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -9053,21 +9271,22 @@ baucis.formatters(response, function (error2, formatter) {
   // to be decorated.
   if (Constructor.super ...</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-  protect.use(function (error, request, response, next) {
-if (!error) return next();
-if (!error.message) return next(error);
+response.vary(&#x27;API-Version&#x27;);
+// TODO move this
+// Requested range is used to select highest possible release number.
+// Then later controllers are checked for matching the release number.
+var version = request.headers[&#x27;api-version&#x27;] || &#x27;*&#x27;;
+// Check the requested API version is valid.
+if (!semver.validRange(version)) {
+  next(RestError.<span class="apidocCodeKeywordSpan">BadRequest</span>(&#x27;The requested API version range &#x22;%s&#x22; was
+not a valid semver range&#x27;, version));
+  return;
+}
 
-var message = &#x27;The requested query hint is invalid&#x27;
-// Bad Mongo query hint (2.x).
-if (error.message === &#x27;bad hint&#x27;) {
-  next(RestError.<span class="apidocCodeKeywordSpan">BadRequest</span>(message));
-  return;
-}
-// Bad Mongo query hint (3.x).
-if (error.message.match(&#x27;planner returned error: bad hint&#x27;)) {
-  next(RestError.BadRequest(message));
-  return;
-}
+request.baucis.release = semver.maxSatisfying(api.releases(), version);
+// Check for API version unsatisfied and give a 400 if no versions match.
+if (!request.baucis.release) {
+  next(RestError.BadRequest(&#x27;The requested API version range &#x22;%s&#x22; could not be satisfied&#x27;, version));
 ...</pre></li>
     </ul>
 
@@ -9116,7 +9335,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9132,7 +9360,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -9148,7 +9392,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9164,7 +9418,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -9461,7 +9731,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9477,7 +9756,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -9493,7 +9788,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9509,7 +9814,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -9806,7 +10127,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9822,7 +10152,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -9838,7 +10184,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -9854,7 +10210,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -10168,7 +10540,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10184,7 +10565,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -10200,7 +10597,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10216,7 +10623,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -10513,7 +10936,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10529,7 +10961,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -10545,7 +10993,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10561,7 +11019,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -10873,7 +11347,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10889,7 +11372,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -10905,7 +11404,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -10921,7 +11430,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -11218,7 +11743,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11234,7 +11768,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -11250,7 +11800,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11266,7 +11826,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -11579,7 +12155,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11595,7 +12180,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -11611,7 +12212,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11627,7 +12238,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -11941,7 +12568,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11957,7 +12593,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -11973,7 +12625,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -11989,7 +12651,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -12239,20 +12917,22 @@ plugins.links.apply(baucis);
   // to be decorated.
   if (Constructor.super ...</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-// A filter function for checking a given value is defined and not null.
-function exists (o) { return o !== undefined &#x26;&#x26; o !== null }
-// Handle variable number of arguments
-function last (skip, names, values) {
-var r = {};
-var position = names.length;
-var count = values.filter(exists).length - skip;
-if (count &#x3c; 1) throw RestError.<span class="apidocCodeKeywordSpan">Misconfigured</span>(&#x27;Too few arguments.&#x27;);
+var RestError = require(&#x27;rest-error&#x27;);
 
-names.forEach(function (name) {
-  var index = skip + count - position;
-  position--;
-  if (index &#x3e;= skip) r[name] = values[index];
-});
+// __Module Definition__
+var Api = module.exports = deco(function (options, protect) {
+  var api = this;
+
+  api.use(function (request, response, next) {
+if (request.baucis) return next(RestError.<span class="apidocCodeKeywordSpan">Misconfigured</span>(&#x27;Baucis request property
+ already created&#x27;));
+
+request.baucis = {};
+response.removeHeader(&#x27;x-powered-by&#x27;);
+// Any caching proxies should be aware of API version.
+response.vary(&#x27;API-Version&#x27;);
+// TODO move this
+// Requested range is used to select highest possible release number.
 ...</pre></li>
     </ul>
 
@@ -12301,7 +12981,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -12317,7 +13006,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -12333,7 +13038,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -12349,7 +13064,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -12662,7 +13393,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -12678,7 +13418,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -12694,7 +13450,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -12710,7 +13476,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -13023,7 +13805,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13039,7 +13830,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -13055,7 +13862,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13071,7 +13888,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -13386,7 +14219,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13402,7 +14244,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -13418,7 +14276,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13434,7 +14302,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -13731,7 +14615,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13747,7 +14640,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -13763,7 +14672,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -13779,7 +14698,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -14076,7 +15011,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14092,7 +15036,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -14108,7 +15068,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14124,7 +15094,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -14421,7 +15407,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14437,7 +15432,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -14453,7 +15464,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14469,7 +15490,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -14766,7 +15803,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14782,7 +15828,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -14798,7 +15860,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -14814,7 +15886,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -15111,7 +16199,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15127,7 +16224,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -15143,7 +16256,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15159,7 +16282,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -15456,7 +16595,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15472,7 +16620,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -15488,7 +16652,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15504,7 +16678,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -15817,7 +17007,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15833,7 +17032,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -15849,7 +17064,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -15865,7 +17090,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -16016,21 +17257,20 @@ plugins.links.apply(baucis);
   return this;
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var streams = [];
-var d = domain.create();
-d.on(&#x27;error&#x27;, handler);
-return function (transmute) {
-  // If it&#x27;s a stream, add it to the reserve pipeline.
-  if (transmute &#x26;&#x26; (transmute.writable || transmute.readable)) {
-    streams.push(transmute);
-    d.<span class="apidocCodeKeywordSpan">add</span>(transmute);
-    return transmute;
-  }
-  // If it&#x27;s a function, create a map stream with it.
-  if (transmute) {
-    transmute = es.map(transmute);
-    streams.push(transmute);
-    d.add(transmute);
+      throw RestError.Misconfigured(&#x27;Release version &#x22;%s&#x22; is not a valid semver version&#x27;, release);
+    }
+    return this.releases().concat(release);
+  });
+
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.<span class="apidocCodeKeywordSpan">add</span>(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
 ...</pre></li>
     </ul>
 
@@ -16213,7 +17453,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -16229,7 +17478,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -16245,7 +17510,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -16261,7 +17536,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
@@ -16591,7 +17882,16 @@ plugins.links.apply(baucis);
   decorators = decorators.concat(parse(arguments));
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.factory(express.Router);
+Api.<span class="apidocCodeKeywordSpan">decorators</span>(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -16607,7 +17907,23 @@ plugins.links.apply(baucis);
   defaults = deco.merge(defaults, incoming);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+var expect = require(&#x27;expect.js&#x27;);
+var mongoose = require(&#x27;mongoose&#x27;);
+var express = require(&#x27;express&#x27;);
+var passport = require(&#x27;passport&#x27;)
+var LocalStrategy = require(&#x27;passport-local&#x27;).Strategy;
+var request = require(&#x27;request&#x27;).<span class="apidocCodeKeywordSpan">defaults</span>({ json: true });
+var baucis = require(&#x27;..&#x27;);
+
+var fixtures = require(&#x27;./fixtures&#x27;);
+
+describe(&#x27;Controllers&#x27;, function () {
+before(fixtures.controller.init);
+beforeEach(fixtures.controller.create);
+...</pre></li>
     </ul>
 
 
@@ -16623,7 +17939,17 @@ plugins.links.apply(baucis);
   internal.factory = factory;
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  api.rest = function (model) {
+    var controller = Controller(model);
+    api.add(controller);
+    return controller;
+  };
+});
+
+Api.<span class="apidocCodeKeywordSpan">factory</span>(express.Router);
+Api.decorators(__dirname, [&#x27;controllers&#x27;]);
+...</pre></li>
     </ul>
 
 
@@ -16639,7 +17965,23 @@ plugins.links.apply(baucis);
   util.inherits(Constructor, super_);
   return Constructor;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var app;
+var server;
+
+var BaseSchema = deco(function () {
+  this.add({ name: String });
+});
+
+BaseSchema.<span class="apidocCodeKeywordSpan">inherit</span>(mongoose.Schema);
+
+var LiqueurSchema = BaseSchema();
+var AmaroSchema = BaseSchema({ bitterness: Number });
+var CordialSchema = BaseSchema({ sweetness: Number });
+
+var Liqueur = mongoose.model(&#x27;liqueur&#x27;, LiqueurSchema);
+var Amaro = Liqueur.discriminator(&#x27;amaro&#x27;, AmaroSchema).plural(&#x27;amari&#x27;);
+...</pre></li>
     </ul>
 
 
